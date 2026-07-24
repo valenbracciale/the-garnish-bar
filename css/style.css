@@ -556,6 +556,9 @@ h1 .accent-script, h2 .accent-script {
   text-align: left;
   margin-top: 4rem;
 }
+@media (max-width: 899px) {
+  .highlights__grid { margin-top: 3rem; }
+}
 .highlight {
   position: relative;
   background: var(--color-bg);
@@ -975,6 +978,11 @@ h1 .accent-script, h2 .accent-script {
   padding: var(--section-pad-y) 0;
   text-align: center;
 }
+/* Bloque 1 queda pegado al header fijo con solo --section-pad-y --
+   ajuste puntual de este bloque, no de la variable global. */
+#consultas {
+  padding-top: calc(var(--section-pad-y) + 25.6px);
+}
 .contact-block__inner {
   max-width: 620px;
   margin: 0 auto;
@@ -1064,4 +1072,24 @@ h1 .accent-script, h2 .accent-script {
   .contact-block__text { font-size: 0.95rem; }
   .contact-block__hours { font-size: 0.95rem; }
   .contact-block__map iframe { height: 400px; }
+}
+
+/* ============================================================
+   HOME (index.html) -- mobile: unificar font-size de todos los h2
+   de sección (highlights, pilares, eventos, reservas) al valor que
+   se dejó para el título de 3 pilares (10% menos que el 2.1rem
+   original). Va al final del archivo a propósito: .agenda__title y
+   .cta-final__title tienen su font-size base más abajo en el
+   documento que .section-title, así que esta regla necesita
+   quedar después de las tres para ganarles en la cascada (misma
+   especificidad, gana quien está más abajo). Desktop no se toca --
+   cada una mantiene su propio override en su media query de 900px.
+   No incluye .intro__title (h1 del hero): queda intocable.
+   ============================================================ */
+@media (max-width: 899px) {
+  .section-title,
+  .agenda__title,
+  .cta-final__title {
+    font-size: 1.89rem;
+  }
 }
