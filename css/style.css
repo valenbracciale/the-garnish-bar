@@ -141,6 +141,36 @@ h1, h2, h3 {
   font-weight: 700;
 }
 
+/* Profundidad sutil solo en títulos (h1/h2, no h3/párrafos/botones/nav) --
+   un solo punto central en vez de repetirlo por selector. Sin offset:
+   es un resplandor difuso centrado detrás del texto, no una sombra
+   proyectada -- por eso el blur es grande y la opacidad se banca ser
+   bastante más marcada que un text-shadow "normal". El acento en
+   Weather Sunday necesita un poco más de blur y opacidad (trazo más
+   fino y color dorado sobre fondo oscuro) para leerse igual de
+   "levantado" que el texto claro de al lado. */
+h1, h2 {
+  text-shadow: 0 0 40px rgba(0, 0, 0, 0.72);
+}
+h1 .accent-script, h2 .accent-script {
+  text-shadow: 0 0 45px rgba(0, 0, 0, 0.78);
+}
+
+/* Excepción: títulos que caen directo sobre un fondo --color-bg-alt
+   (#0a0a0a, casi negro) -- una sombra negra ahí es indistinguible del
+   propio fondo, así que para estos casos puntuales se tiñe la sombra
+   con el dorado de marca (rgb de --color-accent) en vez de negro, para
+   que el aura de profundidad siga siendo perceptible. */
+.pillars .section-title,
+.carta-hero__title,
+.contact-block__subtitle {
+  text-shadow: 0 0 40px rgba(189, 156, 85, 0.48);
+}
+.pillars .section-title .accent-script,
+.carta-hero__title .accent-script {
+  text-shadow: 0 0 45px rgba(189, 156, 85, 0.54);
+}
+
 /* Weather Sunday: acento inline sobre palabras sueltas dentro de un título/bloque */
 .accent-script {
   font-family: var(--font-script);
@@ -227,6 +257,7 @@ h1, h2, h3 {
 }
 .nav__menu a { opacity: 0.9; }
 .nav__menu a:hover { opacity: 1; color: var(--color-accent); }
+.nav__menu a[aria-current="page"] { opacity: 1; color: var(--color-accent); }
 .nav__cta {
   border: 1px solid var(--color-accent);
   padding: 0.6em 1.4em;
@@ -442,6 +473,11 @@ h1, h2, h3 {
   opacity: 0.06;
 }
 .pillars > .container { position: relative; z-index: 1; }
+.pillars__intro {
+  text-align: center;
+  max-width: 620px;
+  margin: 0 auto 3rem;
+}
 .pillars__grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -452,6 +488,7 @@ h1, h2, h3 {
   background: var(--color-bg-alt);
   display: flex;
   flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 .pillar__media {
   height: 320px;
@@ -460,14 +497,33 @@ h1, h2, h3 {
   background-color: rgba(219, 219, 219, 0.05);
 }
 .pillar__body {
+  position: relative;
   padding: 2rem;
   flex: 1;
+  background: var(--color-bg);
+}
+.pillar__body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("/assets/textures/1015-tile.jpg");
+  background-repeat: repeat;
+  background-size: 800px 800px;
+  filter: invert(1);
+  mix-blend-mode: screen;
+  opacity: 0.14;
 }
 .pillar__title {
+  position: relative;
+  z-index: 1;
   font-size: 1.55rem;
   margin-bottom: 0.75rem;
 }
 .pillar__text {
+  position: relative;
+  z-index: 1;
   font-size: 0.85rem;
   opacity: 0.85;
 }
@@ -500,19 +556,44 @@ h1, h2, h3 {
   text-align: left;
   margin-top: 4rem;
 }
-.highlight { position: relative; background: var(--color-bg); }
+.highlight {
+  position: relative;
+  background: var(--color-bg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
 .highlight__media {
   height: 260px;
   background-size: cover;
   background-position: center;
   background-color: rgba(219, 219, 219, 0.05);
 }
-.highlight__body { padding: 1.75rem; }
+.highlight__body {
+  position: relative;
+  padding: 1.75rem;
+  background: var(--color-bg-alt);
+}
+.highlight__body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("/assets/textures/1015-tile.jpg");
+  background-repeat: repeat;
+  background-size: 800px 800px;
+  filter: invert(1);
+  mix-blend-mode: screen;
+  opacity: 0.14;
+}
 .highlight__title {
+  position: relative;
+  z-index: 1;
   font-size: 1.45rem;
   margin-bottom: 0.6rem;
 }
 .highlight__text {
+  position: relative;
+  z-index: 1;
   font-size: 0.85rem;
   opacity: 0.85;
 }
@@ -554,18 +635,35 @@ h1, h2, h3 {
   border-bottom: 1px solid var(--color-border);
   text-align: center;
   overflow: hidden;
+  background: var(--color-bg-alt);
 }
-.agenda__bg {
+/* Mismo esquema de grano que .pillars::before/::after: mismos assets,
+   misma opacidad, copia local porque el color base debajo es
+   --color-bg-alt en vez de --color-bg. */
+.agenda::before {
+  content: "";
   position: absolute;
   inset: 0;
-  background-size: cover;
-  background-position: center;
-  background-color: var(--color-bg);
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("/assets/textures/1015-tile.jpg");
+  background-repeat: repeat;
+  background-size: 800px 800px;
+  filter: invert(1);
+  mix-blend-mode: screen;
+  opacity: 0.05;
 }
-.agenda__scrim {
+.agenda::after {
+  content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("/assets/textures/fine-grain.png");
+  background-repeat: repeat;
+  background-size: 120px 120px;
+  mix-blend-mode: screen;
+  opacity: 0.06;
 }
 .agenda__inner { position: relative; z-index: 1; margin: 0 auto; }
 .agenda__title {
@@ -785,4 +883,185 @@ h1, h2, h3 {
   background-image: url("/assets/images/art-line.svg");
   background-repeat: repeat-x;
   background-size: 150px 4px;
+}
+
+/* ============================================================
+   PÁGINA: CARTA (carta.html)
+   Sección única full-width. Fondo: mismo verde con grano que el
+   resto del sitio (--color-bg + textura, heredado de body::before/
+   ::after, sin overlay ni foto propia). El marco art deco
+   (.pf-edge/.pf-corner) envuelve un recuadro en --color-bg-alt con
+   su propia copia local de la textura 1015 (mismo criterio que
+   .pillars::before, pero con más opacidad para que se lea como
+   superficie propia) + drop shadow para que flote sobre el fondo.
+   ============================================================ */
+.carta-hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: var(--section-pad-y) var(--gutter);
+}
+.carta-hero__frame {
+  position: relative;
+  z-index: 1;
+  max-width: 620px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  text-align: center;
+  background: var(--color-bg-alt);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+.carta-hero__frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("/assets/textures/1015-tile.jpg");
+  background-repeat: repeat;
+  background-size: 800px 800px;
+  filter: invert(1);
+  mix-blend-mode: screen;
+  opacity: 0.14;
+}
+.carta-hero__title {
+  position: relative;
+  z-index: 1;
+  font-size: 2.2rem;
+  line-height: 0.93;
+  margin-bottom: 1.25rem;
+}
+.carta-hero__text {
+  position: relative;
+  z-index: 1;
+  font-size: 0.85rem;
+  opacity: 0.9;
+  margin-bottom: 2rem;
+}
+.carta-hero__frame .btn {
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 900px) {
+  .carta-hero__title { font-size: 2.75rem; }
+  .carta-hero__text { font-size: 0.95rem; }
+  .carta-hero__frame { padding: 4rem; }
+}
+
+/* ============================================================
+   PÁGINA: CONTACTO (contacto.html)
+   3 bloques full-width apilados, verde/negro/verde. Los bloques
+   verdes no tienen background propio (heredan --color-bg + grano
+   de body::before/::after, igual que .intro/.cta-final). El bloque
+   negro reutiliza --color-bg-alt + la misma copia local de textura
+   que .pillars (mismos assets, misma opacidad).
+   ============================================================ */
+.eyebrow {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 0.75rem;
+}
+.contact-block {
+  padding: var(--section-pad-y) 0;
+  text-align: center;
+}
+.contact-block__inner {
+  max-width: 620px;
+  margin: 0 auto;
+}
+.contact-block__inner--wide {
+  max-width: 720px;
+}
+.contact-block__title {
+  font-size: 2.2rem;
+  line-height: 0.93;
+  margin-bottom: 1.25rem;
+}
+.contact-block__subtitle {
+  font-size: 1.55rem;
+  line-height: 1.2;
+  margin-bottom: 1.25rem;
+}
+.contact-block__text {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  margin-bottom: 2rem;
+}
+.contact-block__hours {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  margin-bottom: 2rem;
+}
+.contact-block__map {
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+.contact-block__map iframe {
+  display: block;
+  width: 100%;
+  height: 320px;
+  border: 0;
+}
+
+.contact-block--alt {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-bg-alt);
+}
+.contact-block--alt::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("/assets/textures/1015-tile.jpg");
+  background-repeat: repeat;
+  background-size: 800px 800px;
+  filter: invert(1);
+  mix-blend-mode: screen;
+  opacity: 0.05;
+}
+.contact-block--alt::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("/assets/textures/fine-grain.png");
+  background-repeat: repeat;
+  background-size: 120px 120px;
+  mix-blend-mode: screen;
+  opacity: 0.06;
+}
+.contact-block--alt > .contact-block__inner { position: relative; z-index: 1; }
+
+.btn--icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+}
+.btn--icon svg {
+  width: 1.1em;
+  height: 1.1em;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+@media (min-width: 900px) {
+  .contact-block__title { font-size: 2.75rem; }
+  .contact-block__subtitle { font-size: 1.75rem; }
+  .contact-block__text { font-size: 0.95rem; }
+  .contact-block__hours { font-size: 0.95rem; }
+  .contact-block__map iframe { height: 400px; }
 }
